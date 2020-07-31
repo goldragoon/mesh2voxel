@@ -5,8 +5,10 @@
 #include <stdexcept>
 #include <cstdlib>
 
-const uint32_t WIDTH = 800;
-const uint32_t HEIGHT = 600;
+#include <cxxopts.hpp>
+
+const uint32_t WIDTH = 800, HEIGHT = 600;
+using namespace std;
 
 class Mesh2voxel {
 public:
@@ -52,7 +54,17 @@ private:
     }
 };
 
-int main() {
+int main(int argc, char** argv) {
+
+    cxxopts::Options options("mesh2voxel", "Super-fast polygonal mesh voxelizer using geometry shader with Vulkan.");
+    options.add_options()
+        ("v,visualizer", "Turn on visualizer", cxxopts::value<bool>()->default_value("false"))
+        ;
+
+    auto result = options.parse(argc, argv);
+    bool visualizer = result["visualizer"].as<bool>();
+
+    cout << visualizer << endl;
     Mesh2voxel app;
 
     try {

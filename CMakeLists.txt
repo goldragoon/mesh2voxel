@@ -19,3 +19,6 @@ endif()
 # GLFW
 add_subdirectory("lib/glfw" EXCLUDE_FROM_ALL)
 target_link_libraries(mesh2voxel PRIVATE glfw)
+
+add_subdirectory("lib/cxxopts" EXCLUDE_FROM_ALL)
+target_link_libraries(mesh2voxel PRIVATE cxxopts)

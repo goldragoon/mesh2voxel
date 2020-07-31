@@ -2,3 +2,9 @@
 	path = lib/glfw
 	url = https://github.com/glfw/glfw.git
 	branch = 3.3-stable
+[submodule "lib/cxxopts"]
+	path = lib/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git
+[submodule "lib/assimp"]
+	path = lib/assimp
+	url = https://github.com/assimp/assimp.git
