@@ -7,4 +7,4 @@ project ("mesh2voxel")
 find_package(Vulkan REQUIRED)
 
 # Include sub-projects.
-add_subdirectory ("mesh2voxel")
+add_subdirectory ("src")
