@@ -1,10 +1,20 @@
-﻿#define GLFW_INCLUDE_VULKAN
+﻿// Computer Graphics
+#ifdef _MSC_VER
+#pragma warning(disable: 4819)
+#endif
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
+
+#include <assimp/Importer.hpp>
+#include <assimp/Exporter.hpp>
+#include <assimp/scene.h> 
+#include <assimp/postprocess.h>
+
+// I/O
 
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
-
 #include <cxxopts.hpp>
 
 const uint32_t WIDTH = 800, HEIGHT = 600;
@@ -58,15 +68,46 @@ int main(int argc, char** argv) {
 
     cxxopts::Options options("mesh2voxel", "Super-fast polygonal mesh voxelizer using geometry shader with Vulkan.");
     options.add_options()
+        ("i,input_file", "Location of input file", cxxopts::value<string>()->default_value(""))
+        ("o,output_file", "Location of output file", cxxopts::value<string>()->default_value(".\out.ply"))
         ("v,visualizer", "Turn on visualizer", cxxopts::value<bool>()->default_value("false"))
         ;
 
-    auto result = options.parse(argc, argv);
-    bool visualizer = result["visualizer"].as<bool>();
+    auto rslt = options.parse(argc, argv);
 
-    cout << visualizer << endl;
+    if (!rslt.count("input_file")) {
+        cout << "Input file should be provided." << endl;
+        return 0;
+    }
+    
+    string input_file = rslt["input_file"].as<string>(); 
+    string output_file = rslt["output_file"].as<string>();
+    bool visualizer = rslt["visualizer"].as<bool>();
+
+    cout << input_file << " " << output_file << endl;
+
+    // ACTUAL I/O //
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(input_file,
+        aiProcess_Triangulate |
+        aiProcess_JoinIdenticalVertices |
+        aiProcess_SortByPType);
+
+    if (!scene)
+    {
+        cout << "Fail to load mesh." << endl;
+        return false;
+    }
+   
+    aiMesh *mesh = scene->mMeshes[0];
+    //cout << mesh->mNumFaces << " " << mesh->mNumVertices;
+    Assimp::Exporter exporter;
+    cout << "\tExport path: " << output_file << endl;
+    aiReturn ret = exporter.Export(scene, "ply", output_file, scene->mFlags);
+    cout << exporter.GetErrorString() << endl;
+
+
     Mesh2voxel app;
-
     try {
         app.run();
     }
