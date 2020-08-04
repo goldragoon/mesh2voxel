@@ -1,4 +1,5 @@
 out/
+*.spv
 .CMakeSettings.json
 
 # --- C/C++ ---
