@@ -24,4 +24,4 @@ mesh2voxel -w -i ..\..\..\data\bunny.ply
 ```
 
 ## License
-See the file LINSESE.md.
+See the file [LICENSE.md](LICENSE.md).
